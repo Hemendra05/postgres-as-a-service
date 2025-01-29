@@ -1,0 +1,18 @@
+- name: Create replication user
+  shell: sudo -u postgres psql -c “CREATE USER {{ replication_user }} REPLICATION LOGIN ENCRYPTED PASSWORD ‘{{ replication_password }}’”
+
+- name: Configure primary for replication
+  lineinfile:
+    path: /etc/postgresql/{{ postgresql_version }}/main/postgresql.conf
+    regexp: "^#?wal_level ="
+    line: "wal_level = replica"
+  notify: Restart PostgreSQL
+
+- name: Allow replication connections
+  lineinfile:
+    path: /etc/postgresql/{{ postgresql_version }}/main/pg_hba.conf
+    line: "host replication {{ replication_user }} {{ item }} md5"
+  loop:
+    - "{{ hostvars['replica1']['ansible_host'] }}/32"
+    - "{{ hostvars['replica2']['ansible_host'] }}/32"
+  notify: Restart PostgreSQL

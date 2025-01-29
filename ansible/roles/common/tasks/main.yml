@@ -1,0 +1,23 @@
+- name: Update and upgrade apt packages
+  apt:
+    upgrade: yes
+    update_cache: yes
+
+- name: Add PostgreSQL repository key
+  apt_key:
+    url: "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
+    state: present
+
+- name: Add PostgreSQL repository
+  apt_repository:
+    repo: "deb http://apt.postgresql.org/pub/repos/apt {{ ansible_distribution_release }}-pgdg main"
+    state: present
+
+- name: Install specific PostgreSQL version
+  apt:
+    name:
+      - postgresql-{{ postgresql_version }}
+      - postgresql-contrib-{{ postgresql_version }}
+      - python3-psycopg2
+    state: present
+    update_cache: yes

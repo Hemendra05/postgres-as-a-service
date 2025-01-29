@@ -1,0 +1,28 @@
+---
+- name: Configure PostgreSQL Primary-Replica Setup
+  hosts: postgresql_servers
+  become: yes
+  vars_files:
+    - vars/main.yml
+
+  roles:
+    - common
+    - postgresql
+
+- name: Configure Primary Server
+  hosts: primary
+  become: yes
+  vars_files:
+    - vars/main.yml
+
+  roles:
+    - primary
+
+- name: Configure Replica Servers
+  hosts: replicas
+  become: yes
+  vars_files:
+    - vars/main.yml
+
+  roles:
+    - replica

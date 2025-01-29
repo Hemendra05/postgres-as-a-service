@@ -1,0 +1,26 @@
+- name: Ensure PostgreSQL is started and enabled
+  systemd:
+    name: postgresql
+    state: started
+    enabled: yes
+
+- name: Configure postgresql.conf
+  template:
+    src: postgresql.conf.j2
+    dest: /etc/postgresql_{{ postgresql_version }}.conf
+    owner: postgres
+    group: postgres
+    mode: 0700
+  notify: Restart PostgreSQL
+
+- name: Include PostgreSQL Config file
+  shell: echo "include = '/etc/postgresql_{{ postgresql_version }}.conf'" >> /etc/postgresql/{{ postgresql_version }}/main/postgresql.conf
+
+- name: Configure pg_hba.conf
+  template:
+    src: pg_hba.conf.j2
+    dest: /etc/postgresql/{{ postgresql_version }}/main/pg_hba.conf
+    owner: postgres
+    group: postgres
+    mode: 0700
+  notify: Restart PostgreSQL
