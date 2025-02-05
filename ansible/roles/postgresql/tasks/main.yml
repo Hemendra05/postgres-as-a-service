@@ -7,14 +7,12 @@
 - name: Configure postgresql.conf
   template:
     src: postgresql.conf.j2
-    dest: /etc/postgresql_{{ postgresql_version }}.conf
+    dest: /etc/postgresql/{{ postgresql_version }}/main/postgresql.conf
     owner: postgres
     group: postgres
     mode: 0700
   notify: Restart PostgreSQL
 
-- name: Include PostgreSQL Config file
-  shell: echo "include = '/etc/postgresql_{{ postgresql_version }}.conf'" >> /etc/postgresql/{{ postgresql_version }}/main/postgresql.conf
 
 - name: Configure pg_hba.conf
   template:

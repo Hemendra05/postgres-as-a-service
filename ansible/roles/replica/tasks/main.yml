@@ -5,17 +5,22 @@
 
 - name: Clear existing data directory
   file:
-    path: /var/lib/postgresql/{{ postgresql_version }}/main
+    path: /var/lib/postgresql/{{ postgresql_version }}/main/
     state: absent
+
+- name: Configure .pgpass
+  template:
+    src: pgpass.j2
+    dest: /var/lib/postgresql/.pgpass
+    owner: postgres
+    group: postgres
+    mode: 600
+  notify: Restart PostgreSQL
+
 
 - name: Create base backup
   command: >
-    pg_basebackup -h {{ hostvars['primary']['ansible_host'] }} -D /var/lib/postgresql/{{ postgresql_version }}/main
-    -U {{ replication_user }} -P -v --wal-method=stream
+    pg_basebackup -h {{ hostvars['primary']['ansible_host'] }} -D /var/lib/postgresql/{{ postgresql_version }}/main/
+    -U {{ replication_user }} -P -v -R
   become_user: postgres
-
-- name: Configure replica for replication
-  template:
-    src: recovery.conf.j2
-    dest: /var/lib/postgresql/{{ postgresql_version }}/main/recovery.conf
   notify: Restart PostgreSQL

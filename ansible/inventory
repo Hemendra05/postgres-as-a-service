@@ -1,7 +1,7 @@
 [postgresql_servers]
-primary ansible_host=3.6.41.242 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/TempWebD.pem
-replica1 ansible_host=13.232.193.87 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/TempWebD.pem
-replica2 ansible_host=43.205.216.252 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/TempWebD.pem
+primary ansible_host=65.1.1.116 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/TempWebD.pem
+replica1 ansible_host=52.66.206.235 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/TempWebD.pem
+replica2 ansible_host=13.201.51.181 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/TempWebD.pem
 
 [primary]
 primary
