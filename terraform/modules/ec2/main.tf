@@ -87,12 +87,31 @@ resource "aws_security_group" "postgres" {
   }
 }
 
+# Generate a new RSA key pair.
+resource "tls_private_key" "ec2_key" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+# Create an AWS key pair using the generated public key.
+resource "aws_key_pair" "ec2_key" {
+  key_name   = "${var.project}-key"
+  public_key = tls_private_key.ec2_key.public_key_openssh
+}
+
+# Optionally, write the private key to a file (make sure the destination directory exists).
+resource "local_file" "ec2_key_private" {
+  content         = tls_private_key.ec2_key.private_key_pem
+  filename        = "${path.module}/../../keys/${var.project}-key.pem"
+  file_permission = "0600"
+}
+
 
 resource "aws_instance" "postgres_primary" {
   count                       = var.postgres_primary_replica_count
   ami                         = var.ami_id
   instance_type               = var.instance_type
-  key_name                    = "TempWebD"
+  key_name                    = aws_key_pair.ec2_key.key_name
   subnet_id                   = aws_subnet.public[count.index].id
   availability_zone           = var.availability_zones[0]
   vpc_security_group_ids      = [aws_security_group.postgres.id]
@@ -106,7 +125,7 @@ resource "aws_instance" "postgres_replica" {
   count                       = var.postgres_replica_replica_count
   ami                         = var.ami_id
   instance_type               = var.instance_type
-  key_name                    = "TempWebD"
+  key_name                    = aws_key_pair.ec2_key.key_name
   subnet_id                   = aws_subnet.public[0].id
   availability_zone           = var.availability_zones[0]
   vpc_security_group_ids      = [aws_security_group.postgres.id]
