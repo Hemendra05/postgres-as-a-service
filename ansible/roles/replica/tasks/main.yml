@@ -14,13 +14,11 @@
     dest: /var/lib/postgresql/.pgpass
     owner: postgres
     group: postgres
-    mode: 600
+    mode: 0600
   notify: Restart PostgreSQL
 
 
 - name: Create base backup
-  command: >
-    pg_basebackup -h {{ hostvars['primary']['ansible_host'] }} -D /var/lib/postgresql/{{ postgresql_version }}/main/
+  shell: sudo -u postgres pg_basebackup -h {{ hostvars['primary']['ansible_host'] }} -D /var/lib/postgresql/{{ postgresql_version }}/main/
     -U {{ replication_user }} -P -v -R
-  become_user: postgres
   notify: Restart PostgreSQL
