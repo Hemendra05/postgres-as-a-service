@@ -22,7 +22,6 @@ def run_deployment(params: DeploymentParams):
         update_terraform_vars(params)
         update_ansible_vars(params)
 
-        # Execute Terraform apply – assuming your working directory is "terraform"
         terraform_cmd = [
             "terraform",
             "apply",
@@ -42,7 +41,7 @@ def run_deployment(params: DeploymentParams):
                 detail=f"Terraform failed:\n{tf_run.stderr}",
             )
         logger.info("Terraform Output: %s", tf_run.stdout)
-        ansible_cmd = ansible_cmd = [
+        ansible_cmd = [
             "ansible-playbook",
             "-i",
             ansible_inventory,
