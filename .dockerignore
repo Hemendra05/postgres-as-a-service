@@ -1,6 +1,36 @@
+# Exclude Python virtual environment and caches
 venv/
-__pycache__
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Exclude build artifacts
+build/
+dist/
+
+# Exclude version control files and directories
+.git/
+.gitignore
+
+# Exclude Terraform artifacts that should not be bundled:
+# - The .terraform directory (Terraform caches/modules)
+# - State files and backups (sensitive and environment-specific)
+.terraform/
+*.tfstate
+*.tfstate.*
+terraform.tfvars
+*.tfvars.json
+*.backup
+
+# Exclude Ansible artifacts
+# - Retry files generated when playbooks fail
+*.retry
+
+# Exclude OS-generated files
+.DS_Store
+Thumbs.db
+
+# Optionally exclude Docker configuration files if not needed at runtime
+# (Remove these lines if you want them in your container)
 Dockerfile
-*.yaml
-*.lock.hcl
-.terraform
+.dockerignore
