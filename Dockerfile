@@ -20,12 +20,9 @@ RUN apt-get update && \
     git \
     wget && \
     \
-    wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg && \
-    echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" \
-    | tee /etc/apt/sources.list.d/hashicorp.list && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends terraform && \
-    \
+    wget https://releases.hashicorp.com/terraform/1.10.5/terraform_1.10.5_linux_amd64.zip && \
+    unzip terraform_1.10.5_linux_amd64.zip -d /usr/local/bin/ && \
+    rm -rf terraform_1.10.5_linux_amd64.zip && \
     apt-get purge -y git wget software-properties-common gnupg && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
