@@ -18,14 +18,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gnupg \
     ansible \
     git \
+    wget \
     && rm -rf /var/lib/apt/lists/*
 
 
 RUN wget -O- https://apt.releases.hashicorp.com/gpg | \
     gpg --dearmor | \
-    sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null
+    tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null
 
-RUN sudo apt update && sudo apt-get install terraform
+RUN apt update && apt-get -y install terraform
 
 
 COPY --from=builder /root/.local /root/.local
